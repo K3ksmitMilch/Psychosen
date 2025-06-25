@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NebulaHub - Key System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-start: #00132b;
+            --background-end: #1e0027;
+            --card-background: rgba(35, 35, 66, 0.6); /* Slightly more transparent */
+            --text-color: #f0f0f0;
+            --primary-color: #4d79ff;
+            --primary-hover: #3a66cc;
+            --success-color: #33cc75;
+            --success-hover: #2ba362;
+            --error-color: #ff4d4d;
+            --info-color: #4d79ff;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --glow-color: #4d79ff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow: hidden; /* Prevent scrollbar from gradient */
+            position: relative;
+        }
+
+        /* Subtle background glow effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 50% 50%, var(--primary-color) 0%, transparent 70%);
+            opacity: 0.1;
+            filter: blur(100px);
+            animation: glow1 15s infinite alternate ease-in-out;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            right: -150px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at 50% 50%, var(--success-color) 0%, transparent 70%);
+            opacity: 0.08;
+            filter: blur(120px);
+            animation: glow2 20s infinite alternate-reverse ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes glow1 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(50px, 80px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes glow2 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-70px, -40px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .container {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 15px 40px var(--shadow-color);
+            width: 90%;
+            max-width: 600px; /* Slightly wider */
+            padding: 35px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.8em;
+            font-weight: 800;
+            text-shadow: 0 0 15px rgba(77, 121, 255, 0.5);
+        }
+
+        .step {
+            background-color: rgba(0, 0, 0, 0.2); 
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+        
+        .step:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            border-color: rgba(77, 121, 255, 0.4); /* Glow on hover */
+        }
+
+        .step h3 {
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1.8em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 0 8px rgba(255,255,255,0.2);
+        }
+
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 18px;
+            box-shadow: 0 0 10px rgba(77, 121, 255, 0.6);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(77, 121, 255, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(77, 121, 255, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(77, 121, 255, 0.6); }
+        }
+
+        .button {
+            background: linear-gradient(45deg, var(--primary-color), #8a5aff);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            outline: none;
+        }
+
+        .button:focus {
+            box-shadow: 0 0 0 3px rgba(77, 121, 255, 0.5);
+        }
+
+        .button:hover {
+            background: linear-gradient(45deg, #3a66cc, #7a4ed9);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .key-display {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 1.2em;
+            letter-spacing: 1.5px;
+            margin: 25px 0;
+            display: block; /* Always block for better copying */
+            word-break: break-all;
+            border: 1px solid rgba(77, 121, 255, 0.3); /* Soft blue border */
+            user-select: all;
+            color: #b3e0ff;
+            box-shadow: inset 0 0 10px rgba(77, 121, 255, 0.2);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .copy-button {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            outline: none;
+        }
+
+        .copy-button:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+        }
+
+        .copy-button:focus {
+            box-shadow: 0 0 0 3px rgba(51, 204, 117, 0.5);
+        }
+
+        .status {
+            margin-top: 30px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            animation: slideIn 0.6s ease-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status.error {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .status.success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .status.info {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        p {
+            font-size: 1.05em;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 15px;
+        }
+        small {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nebula - Key System</h1>
+        
+        <div id="lootlink-step" class="step">
+            <h3><span class="step-number">1</span> Besuche den Lootlink</h3>
+            <p>Um einen Key zu erhalten, musst du zuerst den Lootlink besuchen und die dortigen Schritte abschließen. Dies hilft uns, das System kostenlos zu halten.</p>
+            <button id="lootlink-button" class="button">Lootlink besuchen & Session starten</button>
+            <p><small>Wichtig: Nach dem Abschluss wirst du automatisch zu dieser Seite zurückgeleitet, um deinen Key zu erhalten.</small></p>
+        </div>
+        
+        <div id="key-generation-step" class="step hidden">
+            <h3><span class="step-number">2</span> Dein Key</h3>
+            <p>Dein Key wird generiert, sobald der Lootlink erfolgreich verifiziert wurde. Kopiere ihn und füge ihn in dein Roblox-Script ein.</p>
+            <div id="key-display" class="key-display">Lade Key...</div>
+            <button id="copy-key" class="copy-button hidden">Key kopieren</button>
+        </div>
+        
+        <div id="status" class="status hidden"></div>
+    </div>
+
+    <script>
+        // Konfiguration
+        const config = {
+            // !! WICHTIG: Ersetze dies durch deine tatsächliche Replit-Backend-URL !!
+            apiUrl: "https://key-system-yourusername.replit.app", 
+            // !! WICHTIG: Ersetze dies durch deinen SECRET_KEY vom Backend !!
+            secretKey: "VerySecureSecretKeyForYourKeySystem2024",
+            // !! WICHTIG: Ersetze dies durch die URL, unter der DIESES Frontend gehostet wird !!
+            frontendUrl: window.location.origin + window.location.pathname
+        };
+
+        // DOM-Elemente
+        const lootlinkStep = document.getElementById('lootlink-step');
+        const lootlinkButton = document.getElementById('lootlink-button');
+        const keyGenerationStep = document.getElementById('key-generation-step');
+        const keyDisplay = document.getElementById('key-display');
+        const copyKeyButton = document.getElementById('copy-key');
+        const statusDisplay = document.getElementById('status');
+
+        // Globale Variablen
+        let currentSessionId = '';
+        
+        // Base64 Kodierung
+        function encodeBase64(data) {
+            return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+        }
+
+        // Base64 Dekodierung
+        function decodeBase64(b64) {
+            return JSON.parse(decodeURIComponent(escape(atob(b64))));
+        }
+
+        // HMAC-Signatur erstellen (Web Crypto API)
+        async function createHmac(data) {
+            const encoder = new TextEncoder();
+            const keyData = encoder.encode(config.secretKey);
+            const message = encoder.encode(JSON.stringify(data));
+
+            const key = await crypto.subtle.importKey(
+                'raw', 
+                keyData, 
+                { name: 'HMAC', hash: 'SHA-256' }, 
+                false, 
+                ['sign']
+            );
+
+            const signatureBuffer = await crypto.subtle.sign(
+                'HMAC', 
+                key, 
+                message
+            );
+
+            return Array.from(new Uint8Array(signatureBuffer))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // HMAC-Signatur verifizieren (für Server-Antworten)
+        async function verifyHmac(data, signature) {
+            const encoder = new TextEncoder();
+            const keyData = encoder.encode(config.secretKey);
+            const message = encoder.encode(JSON.stringify(data));
+            const signatureBuffer = Uint8Array.from(signature.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
+            try {
+                const key = await crypto.subtle.importKey(
+                    'raw', 
+                    keyData, 
+                    { name: 'HMAC', hash: 'SHA-256' }, 
+                    false, 
+                    ['verify']
+                );
+                return await crypto.subtle.verify(
+                    'HMAC', 
+                    key, 
+                    signatureBuffer, 
+                    message
+                );
+            } catch (e) {
+                console.error("HMAC verification error:", e);
+                return false;
+            }
+        }
+
+        // Key generieren Funktion
+        async function generateKey(sessionIdToUse) {
+            try {
+                showStatus('Key wird generiert...', 'info');
+                keyDisplay.textContent = 'Lade Key...';
+                copyKeyButton.classList.add('hidden');
+
+                const data = { sessionId: sessionIdToUse };
+                const signature = await createHmac(data);
+                const encodedData = encodeBase64(data);
+                
+                const generateKeyEndpoint = decodeBase64("L2dlbmVyYXRlLWtleQ=="); // /generate-key
+                
+                const response = await fetch(`${config.apiUrl}${generateKeyEndpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: encodedData,
+                        signature: signature
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.data && result.signature) {
+                    const decodedData = decodeBase64(result.data);
+                    const isResponseValid = await verifyHmac(decodedData, result.signature);
+
+                    if (!isResponseValid) {
+                        showStatus('Fehler: Ungültige Antwort-Signatur vom Server.', 'error');
+                        keyDisplay.textContent = 'Fehler beim Generieren.';
+                        return;
+                    }
+
+                    if (decodedData.success && decodedData.key) {
+                        keyDisplay.textContent = decodedData.key;
+                        copyKeyButton.classList.remove('hidden');
+                        showStatus('Key erfolgreich generiert! Kopiere ihn jetzt.', 'success');
+                    } else {
+                        showStatus('Fehler: ' + (decodedData.message || 'Unbekannter Fehler beim Key-Generierung. Versuche es erneut.'), 'error');
+                        keyDisplay.textContent = 'Fehler beim Generieren.';
+                    }
+                } else {
+                    showStatus('Fehler: ' + (result.message || 'Unerwartete Antwort vom Server. Status: ' + response.status), 'error');
+                    keyDisplay.textContent = 'Fehler beim Generieren.';
+                }
+            } catch (error) {
+                console.error("Key generation error:", error);
+                showStatus('Netzwerkfehler beim Key generieren. Bitte versuche es später erneut. ' + error.message, 'error');
+                keyDisplay.textContent = 'Fehler beim Generieren.';
+            }
+        }
+
+        // Statusanzeige mit Auto-Hide
+        let statusTimeout;
+        function showStatus(message, type) {
+            statusDisplay.textContent = message;
+            statusDisplay.className = 'status ' + type;
+            statusDisplay.classList.remove('hidden');
+
+            clearTimeout(statusTimeout);
+            statusTimeout = setTimeout(() => {
+                statusDisplay.classList.add('hidden');
+            }, 8000); 
+        }
+
+        // Event Listener für Lootlink-Button
+        lootlinkButton.addEventListener('click', () => {
+            currentSessionId = Array.from(crypto.getRandomValues(new Uint8Array(20)))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+            
+            const verifyLootlinkEndpoint = decodeBase64("L3ZlcmlmeS1sb290bGluaw=="); // /verify-lootlink
+            
+            // Dies ist die URL, zu der Linkvertise umleiten SOLLTE, nachdem der User die Schritte abgeschlossen hat.
+            // Du musst diese URL (dein Frontend-URL + Session-ID + Flag) in Linkvertise als Weiterleitungs-URL einstellen.
+            const redirectBackUrl = `${config.frontendUrl}?sessionId=${currentSessionId}&lootlinkVerified=true`;
+            
+            // Die Linkvertise-URL, die du hier öffnest. Diese URL sollte dann ZU DEINEM BACKEND weiterleiten
+            // und dein Backend leitet dann zu redirectBackUrl weiter.
+            // Beispiel: Linkvertise -> DEIN BACKEND verify-lootlink Endpoint -> Frontend-URL
+            
+            const backendVerifyUrl = `${config.apiUrl}${verifyLootlinkEndpoint}?sessionId=${currentSessionId}&redirectUrl=${encodeURIComponent(redirectBackUrl)}`;
+            
+            // Öffne das Lootlink-Fenster. Der Nutzer muss dann auf Linkvertise die Schritte abschließen.
+            window.open(backendVerifyUrl, '_blank', 'noopener,noreferrer');
+            
+            showStatus('Bitte schließe den Lootlink im neuen Tab ab. Key-Generierung startet danach automatisch.', 'info');
+            lootlinkButton.disabled = true; // Button deaktivieren
+        });
+
+        // Key kopieren
+        copyKeyButton.addEventListener('click', () => {
+            const key = keyDisplay.textContent;
+            if (key && key !== 'Lade Key...' && key !== 'Fehler beim Generieren.') {
+                navigator.clipboard.writeText(key)
+                    .then(() => {
+                        showStatus('Key in die Zwischenablage kopiert!', 'success');
+                    })
+                    .catch(err => {
+                        showStatus('Fehler beim Kopieren: ' + err.message, 'error');
+                    });
+            } else {
+                showStatus('Nichts zu kopieren.', 'error');
+            }
+        });
+
+        // Initialisierungslogik bei Seitenaufruf
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionIdFromUrl = urlParams.get('sessionId');
+            const lootlinkVerified = urlParams.get('lootlinkVerified') === 'true';
+
+            if (sessionIdFromUrl && lootlinkVerified) {
+                currentSessionId = sessionIdFromUrl;
+                lootlinkStep.classList.add('hidden'); // Lootlink-Schritt ausblenden
+                keyGenerationStep.classList.remove('hidden'); // Key-Generierungsschritt anzeigen
+                generateKey(currentSessionId); // Key automatisch generieren
+                
+                // URL Parameter entfernen für saubere URL
+                window.history.replaceState({}, document.title, config.frontendUrl);
+
+            } else if (sessionIdFromUrl && !lootlinkVerified) {
+                showStatus('Lootlink wurde nicht erfolgreich verifiziert oder ungültige Rückleitung.', 'error');
+                // Optional: Zeige wieder den Lootlink-Schritt, um es erneut zu versuchen
+            } else {
+                // Normaler Start: Zeige nur den Lootlink-Schritt
+                lootlinkStep.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html> 
